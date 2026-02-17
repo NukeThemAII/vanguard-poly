@@ -1,0 +1,73 @@
+# TODO
+
+Cross-session priority queue for VANGUARD-POLY.
+
+## Phase Status
+
+- [x] Phase 0: OpenClaw Telegram-first control-plane scaffold
+- [x] Phase 1: Engine scaffold + hygiene baseline
+- [ ] Phase 2: LLM adapters (Gemini + DeepSeek, schema-only outputs)
+- [ ] Phase 3: Polymarket adapters (market + execution under DRY_RUN)
+- [ ] Phase 4: Strategy loop and resilience hardening
+- [ ] Phase 5: Optional read-only dashboard
+- [ ] Phase 6: OpenClaw <-> Engine bridge hardening
+- [ ] Phase 7: Threat model and runbook productionization
+
+## Immediate Priorities (Next 1-2 Sessions)
+
+- [ ] Define `ILLMProvider` interface in `packages/adapters`.
+- [ ] Add shared zod schema for LLM analysis payload:
+  - `sentiment` in `[-1, 1]`
+  - `confidence` in `[0, 1]`
+  - `fairProbability` in `[0, 1]`
+  - `rationale` short text
+- [ ] Implement Gemini adapter with queue spacing/rate limiting.
+- [ ] Implement DeepSeek adapter (OpenAI-compatible base URL).
+- [ ] Add malformed JSON rejection tests for LLM outputs.
+
+## Engine Hardening Backlog
+
+- [ ] Add risk-evaluation module that enforces caps before any execution path.
+- [ ] Add idempotent execution intent record (`execution_intents`) before place-order attempts.
+- [ ] Add timeout/retry/backoff/circuit-breaker wrappers for all outbound providers.
+- [ ] Add dead-man switch ping worker using `DEAD_MAN_SWITCH_URL`.
+- [ ] Add structured request IDs and audit fields to ops endpoint logs.
+- [ ] Add rate limiting for `/ops/*` endpoints.
+
+## OpenClaw Control-Plane Backlog
+
+- [ ] Wire plugin to real OpenClaw plugin types when available.
+- [ ] Implement `/set` key validation UX feedback with clear allowlist descriptions.
+- [ ] Add `/last` command (decision + rationale hash) once decision pipeline exists.
+- [ ] Add `/dryrun on|off` command as explicit convenience wrapper.
+- [ ] Add Telegram operator identity allowlist checks in runtime config.
+
+## Data and Persistence Backlog
+
+- [ ] Extend migrations for:
+  - provider call audit table
+  - execution intents table
+  - positions and PnL snapshots
+- [ ] Add migration checksum support to detect modified SQL files.
+- [ ] Add DB backup/restore scripts for ops runbook.
+
+## Testing Backlog
+
+- [ ] Integration test for full engine boot and `/ops/status` shape.
+- [ ] Integration test for `/ops/config` allowlist rejects unknown keys.
+- [ ] Property tests for env coercion edge cases.
+- [ ] Failure injection tests for provider timeout and retry behavior.
+
+## Ops / DevEx Backlog
+
+- [ ] Add CI workflow (`typecheck`, `test`, `lint`, `build`) on PRs.
+- [ ] Pin Node toolchain in CI to 22.x.
+- [ ] Add Makefile shortcuts for common operator workflows.
+- [ ] Add production `.env` validation docs for VPS deployment.
+
+## Handoff Checklist (Per Session)
+
+- [ ] Update root `LOG.md` with timestamped changes.
+- [ ] Update root `TODO.md` statuses and next priorities.
+- [ ] Mirror major updates into `docs/LOG.md` and `docs/TODO.md` as needed.
+- [ ] Record exact validation commands executed and their result.
