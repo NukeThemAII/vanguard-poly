@@ -6,7 +6,7 @@ Cross-session priority queue for VANGUARD-POLY.
 
 - [x] Phase 0: OpenClaw Telegram-first control-plane scaffold
 - [x] Phase 1: Engine scaffold + hygiene baseline
-- [ ] Phase 2: LLM adapters (Gemini + DeepSeek, schema-only outputs)
+- [x] Phase 2: LLM adapters (Gemini + DeepSeek, schema-only outputs)
 - [ ] Phase 3: Polymarket adapters (market + execution under DRY_RUN)
 - [ ] Phase 4: Strategy loop and resilience hardening
 - [ ] Phase 5: Optional read-only dashboard
@@ -15,15 +15,16 @@ Cross-session priority queue for VANGUARD-POLY.
 
 ## Immediate Priorities (Next 1-2 Sessions)
 
-- [ ] Define `ILLMProvider` interface in `packages/adapters`.
-- [ ] Add shared zod schema for LLM analysis payload:
+- [x] Define `ILLMProvider` interface in `packages/adapters`.
+- [x] Add shared zod schema for LLM analysis payload:
   - `sentiment` in `[-1, 1]`
   - `confidence` in `[0, 1]`
   - `fairProbability` in `[0, 1]`
   - `rationale` short text
-- [ ] Implement Gemini adapter with queue spacing/rate limiting.
-- [ ] Implement DeepSeek adapter (OpenAI-compatible base URL).
-- [ ] Add malformed JSON rejection tests for LLM outputs.
+- [x] Implement Gemini adapter with queue spacing/rate limiting.
+- [x] Implement DeepSeek adapter (OpenAI-compatible base URL).
+- [x] Add malformed JSON rejection tests for LLM outputs.
+- [ ] Wire adapter selection and invocation into engine decision pipeline.
 
 ## Engine Hardening Backlog
 
@@ -59,6 +60,7 @@ Cross-session priority queue for VANGUARD-POLY.
 - [ ] Integration test for `/ops/config` allowlist rejects unknown keys.
 - [ ] Property tests for env coercion edge cases.
 - [ ] Failure injection tests for provider timeout and retry behavior.
+- [ ] Adapter integration tests for API timeout/429 and retry behavior.
 
 ## Ops / DevEx Backlog
 

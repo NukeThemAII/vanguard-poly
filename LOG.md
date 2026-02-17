@@ -74,3 +74,26 @@ Use this file for concise, timestamped entries after each meaningful change.
   - Keep root `TODO.md` as source of truth and mirror core phase changes to `docs/TODO.md`.
 - Next:
   - Continue Phase 2 adapter work with schema-first LLM validation.
+
+## [2026-02-17 11:15] - Phase 2 Adapter Layer Implemented
+
+- Context:
+  - Continued build-out into Phase 2 after completing control-plane and engine hygiene scaffolding.
+- Changes:
+  - Replaced adapter placeholder with production-oriented adapter package structure.
+  - Added `ILLMProvider` contract and shared analysis request/result types.
+  - Added strict zod schema for LLM analysis payload (`sentiment`, `confidence`, `fairProbability`, `rationale`).
+  - Added robust JSON extraction/parser utility with malformed-response rejection.
+  - Implemented `GeminiProvider` with queue-based request spacing and schema-only outputs.
+  - Implemented `DeepSeekProvider` (OpenAI-compatible endpoint style) with schema-only outputs.
+  - Added unit tests for parser validation, queue burst control, Gemini adapter, and DeepSeek adapter.
+  - Updated root/docs TODO and architecture/threat-model docs to reflect Phase 2 completion state.
+- Validation:
+  - `npm run typecheck` passed.
+  - `npm run test` passed (12 tests, 7 files).
+  - `npm run lint` passed.
+- Risks / Notes:
+  - Current runtime in this environment is Node 20; project baseline remains Node 22.
+  - Adapters are not yet wired into engine decision loop (Phase 3/4 integration item).
+- Next:
+  - Start Phase 3 market data + DRY_RUN execution adapter implementation.

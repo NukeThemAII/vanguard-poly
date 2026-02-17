@@ -6,7 +6,7 @@ Source of truth: root `TODO.md`. This file is a phase-oriented mirror for AGENTS
 
 - [x] Phase 0: Operator control-plane scaffold (OpenClaw + Telegram-safe defaults)
 - [x] Phase 1: Engine scaffold + hygiene baseline
-- [ ] Phase 2: LLM adapters (provider-agnostic + schema-only output)
+- [x] Phase 2: LLM adapters (provider-agnostic + schema-only output)
 - [ ] Phase 3: Polymarket market/wallet adapters under DRY_RUN
 - [ ] Phase 4: Strategy loop + resiliency drills
 - [ ] Phase 5: Optional read-only dashboard
@@ -35,7 +35,14 @@ Source of truth: root `TODO.md`. This file is a phase-oriented mirror for AGENTS
 
 ## Next Up (Phase 2)
 
-- [ ] Define `ILLMProvider` interface in `packages/adapters`
-- [ ] Add Gemini adapter with queue spacing
-- [ ] Add DeepSeek adapter (OpenAI-compatible)
-- [ ] Add schema validation tests for malformed model output
+- [x] Define `ILLMProvider` interface in `packages/adapters`
+- [x] Add Gemini adapter with queue spacing
+- [x] Add DeepSeek adapter (OpenAI-compatible)
+- [x] Add schema validation tests for malformed model output
+
+## Next Up (Phase 3)
+
+- [ ] Implement market data adapters (trending/high-volume + orderbook snapshot)
+- [ ] Add DRY_RUN order execution pathway with IOC/FOK semantics
+- [ ] Implement risk gate evaluation before execution attempt
+- [ ] Persist execution intent IDs before placement attempts

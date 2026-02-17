@@ -2,7 +2,7 @@
 
 Institutional-grade TypeScript monorepo for a low-latency, LLM-assisted Polymarket trading engine with an OpenClaw Telegram control-plane.
 
-Current state: **Phase 0 + Phase 1 scaffold complete**. No live trading loop is implemented yet.
+Current state: **Phase 0 + Phase 1 + Phase 2 complete**. Live market/trading loop is intentionally not implemented yet.
 
 ## Why This Exists
 
@@ -118,6 +118,21 @@ vanguard-poly/
 - `packages/utils/src/backoff.ts` retry helper for upcoming adapter work.
 - `packages/domain/src/index.ts` typed risk/safety placeholders.
 
+### LLM adapters (Phase 2)
+
+- `packages/adapters/src/types.ts`:
+  - `ILLMProvider` interface
+  - shared request/result/provider metadata types
+- `packages/adapters/src/schema.ts`:
+  - strict zod schema for `{ sentiment, confidence, fairProbability, rationale }`
+- `packages/adapters/src/json.ts`:
+  - fenced/raw JSON extraction
+  - schema validation and malformed payload rejection
+- `packages/adapters/src/providers/gemini-provider.ts`:
+  - Gemini adapter with rate-limited queue spacing
+- `packages/adapters/src/providers/deepseek-provider.ts`:
+  - DeepSeek adapter using OpenAI-compatible chat completions
+
 ## Ops API (Current)
 
 All endpoints require header:
@@ -230,6 +245,14 @@ npm run build
 - `apps/engine/src/tests/ops-auth.test.ts`
   - validates unauthorized requests are rejected
   - validates `helmet` security headers are present
+- `packages/adapters/src/tests/json.test.ts`
+  - validates strict schema parsing and malformed JSON rejection
+- `packages/adapters/src/tests/rate-limited-queue.test.ts`
+  - validates queue spacing prevents burst execution
+- `packages/adapters/src/tests/gemini-provider.test.ts`
+  - validates Gemini structured parsing + queue throttling
+- `packages/adapters/src/tests/deepseek-provider.test.ts`
+  - validates DeepSeek structured parsing path
 
 ## Roadmap (High-Level)
 

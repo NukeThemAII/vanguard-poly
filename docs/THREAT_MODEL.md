@@ -29,6 +29,7 @@
 - Safe defaults: `DRY_RUN=true`, `KILL_SWITCH=true`, `ARMED=false`.
 - Config allowlist on `/ops/config`.
 - No shell command execution from OpenClaw skill/plugin stubs.
+- LLM outputs are schema-validated before downstream use.
 
 ## Open Items
 

@@ -23,3 +23,11 @@
 - **Alternatives Considered:** Deferring security middleware and host binding until Phase 4 (rejected due to low implementation cost and early hardening value).
 - **Impact:** Better API hardening posture, clearer network exposure behavior, and improved multi-agent documentation hygiene.
 - **Follow-ups:** Add rate limiting and request correlation IDs to `/ops/*` endpoints.
+
+## [2026-02-17 11:15] - Phase 2 Completion (Adapter Baseline)
+
+- **Context:** Build progression from Phase 1 scaffolding to provider-agnostic LLM adapter layer.
+- **Decision:** Implemented strict schema-driven adapter package with Gemini and DeepSeek providers, queue spacing, and malformed JSON rejection.
+- **Alternatives Considered:** Deferring adapter implementation until market integration (rejected to keep Phase 2 boundaries explicit and testable).
+- **Impact:** Engine can consume deterministic, validated analysis payloads once strategy loop wiring begins in later phases.
+- **Follow-ups:** Integrate adapters into decision pipeline and add provider timeout/retry/circuit-breaker wrappers.
