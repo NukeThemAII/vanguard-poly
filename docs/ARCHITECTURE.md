@@ -16,6 +16,7 @@
 - Engine enforces token auth, applies `helmet` headers, and persists control-state in SQLite.
 - Engine binds by `OPS_HOST` (default `127.0.0.1`).
 - LLM adapters expose schema-validated structured outputs for Phase 4 strategy integration.
+- Strategy layer includes `CandidateSelector` to scan high-volume markets and remove low-liquidity noise.
 - Engine exposes `/ops/simulate-trade` for authenticated dry-run execution checks.
 - Dry-run execution path uses IOC/FOK semantics, hard risk gates, and intent persistence.
 

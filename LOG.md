@@ -120,3 +120,21 @@ Use this file for concise, timestamped entries after each meaningful change.
   - Runtime environment here is Node 20 while project baseline remains Node 22.
 - Next:
   - Wire LLM outputs into strategy candidate generation and scheduler loop (Phase 4).
+
+## [2026-02-17 17:15] - Phase 4 Kickoff: Candidate Selector
+
+- Context:
+  - Began Phase 4 strategy loop work after completing Phase 3.
+- Changes:
+  - Added `apps/engine/src/strategy/CandidateSelector.ts`.
+  - Implemented `scan()` to fetch trending/high-volume markets and filter low-liquidity noise using `MIN_LIQUIDITY_USD`.
+  - Added `MarketAdapter` export in `packages/adapters` for clean workspace import usage.
+  - Added `apps/engine/src/tests/strategy.test.ts` validating candidate quality and filtering behavior.
+- Validation:
+  - `npm run typecheck` passed.
+  - `npm run test` passed (22 tests, 12 files).
+  - `npm run lint` passed.
+- Risks / Notes:
+  - Selector currently performs market ranking/filtering only; LLM scoring and scheduling are next.
+- Next:
+  - Wire selector output into a scheduler-driven strategy loop with LLM analysis.

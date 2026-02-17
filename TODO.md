@@ -28,7 +28,9 @@ Cross-session priority queue for VANGUARD-POLY.
 - [x] Add DRY_RUN IOC/FOK execution path with hard risk gates.
 - [x] Persist execution intents before placement attempts.
 - [x] Add `/ops/simulate-trade` endpoint for authenticated dry-run execution checks.
+- [x] Add `strategy/CandidateSelector.scan()` for high-volume market scanning with liquidity filter.
 - [ ] Wire LLM analysis output into strategy-driven trade candidate selection.
+- [ ] Add strategy scheduler loop that repeatedly scans and scores candidates.
 
 ## Engine Hardening Backlog
 

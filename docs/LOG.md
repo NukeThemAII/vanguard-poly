@@ -39,3 +39,11 @@
 - **Alternatives Considered:** Delaying intent persistence until live execution (rejected due to idempotency/audit requirements).
 - **Impact:** Engine now has an end-to-end dry-run execution pipeline with authenticated ops trigger (`/ops/simulate-trade`) and audited intent records.
 - **Follow-ups:** Integrate strategy scheduler and LLM-driven candidate generation in Phase 4.
+
+## [2026-02-17 17:15] - Phase 4 Kickoff (Candidate Selector)
+
+- **Context:** User requested start of Phase 4 strategy loop with candidate scanning.
+- **Decision:** Added `CandidateSelector.scan()` and exported `MarketAdapter` from `packages/adapters` for workspace-safe engine imports.
+- **Alternatives Considered:** Keeping selector logic inline in simulator/orchestrator (rejected to preserve modular strategy boundaries).
+- **Impact:** Engine now has a dedicated strategy entrypoint for high-volume candidate discovery with low-liquidity filtering.
+- **Follow-ups:** Add scheduler tick and LLM scoring to convert candidates into decisions.

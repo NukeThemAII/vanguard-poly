@@ -46,3 +46,5 @@ export interface IMarketDataProvider {
   getTrendingMarkets(request?: TrendingMarketsRequest): Promise<TrendingMarket[]>;
   getOrderbookSnapshot(request: OrderBookRequest): Promise<OrderBookSnapshot>;
 }
+
+export type MarketAdapter = IMarketDataProvider;

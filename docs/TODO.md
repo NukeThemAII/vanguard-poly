@@ -51,6 +51,8 @@ Source of truth: root `TODO.md`. This file is a phase-oriented mirror for AGENTS
 
 ## Next Up (Phase 4)
 
+- [x] Add strategy candidate scanner (`strategy/CandidateSelector`) for high-volume markets
+- [x] Filter low-liquidity noise using `MIN_LIQUIDITY_USD` threshold
 - [ ] Wire LLM provider outputs into market selection and side/size decisions
 - [ ] Add scheduler tick loop with provider failure isolation
 - [ ] Add dead-man switch ping for external healthcheck URL
