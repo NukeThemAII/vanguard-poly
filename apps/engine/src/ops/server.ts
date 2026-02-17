@@ -1,4 +1,5 @@
 import express, { type NextFunction, type Request, type Response } from 'express';
+import helmet from 'helmet';
 import type { Logger } from 'winston';
 import type { Env } from '../config/env';
 import { getEngineState, setEngineState } from '../database/db';
@@ -78,6 +79,7 @@ export const buildOpsApp = ({
 }: OpsServerDependencies) => {
   const app = express();
 
+  app.use(helmet());
   app.use(express.json({ limit: '32kb' }));
   app.use('/ops', requireToken(env.VANGUARD_TOKEN));
 
@@ -150,7 +152,7 @@ export const startOpsServer = (dependencies: OpsServerDependencies) => {
   const { env, logger } = dependencies;
   const app = buildOpsApp(dependencies);
 
-  return app.listen(env.OPS_PORT, () => {
-    logger.info('Ops server listening', { port: env.OPS_PORT });
+  return app.listen(env.OPS_PORT, env.OPS_HOST, () => {
+    logger.info('Ops server listening', { host: env.OPS_HOST, port: env.OPS_PORT });
   });
 };

@@ -33,6 +33,8 @@ Cross-session priority queue for VANGUARD-POLY.
 - [ ] Add dead-man switch ping worker using `DEAD_MAN_SWITCH_URL`.
 - [ ] Add structured request IDs and audit fields to ops endpoint logs.
 - [ ] Add rate limiting for `/ops/*` endpoints.
+- [x] Add API hardening middleware (`helmet`) on `/ops/*`.
+- [x] Bind ops server to configurable host (`OPS_HOST`), default loopback-only.
 
 ## OpenClaw Control-Plane Backlog
 
@@ -71,3 +73,8 @@ Cross-session priority queue for VANGUARD-POLY.
 - [ ] Update root `TODO.md` statuses and next priorities.
 - [ ] Mirror major updates into `docs/LOG.md` and `docs/TODO.md` as needed.
 - [ ] Record exact validation commands executed and their result.
+
+## Source-of-Truth Note
+
+- Root `TODO.md` is the primary backlog.
+- `docs/TODO.md` is kept as a synced phase mirror for AGENTS.md workflow.

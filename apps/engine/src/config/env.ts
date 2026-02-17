@@ -52,6 +52,7 @@ const optionalUrl = z.preprocess((value) => {
 
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+  OPS_HOST: z.string().min(1).default('127.0.0.1'),
   OPS_PORT: coerceNumber(z.number().int().positive(), 3077),
   VANGUARD_TOKEN: z.string().min(1, 'VANGUARD_TOKEN is required'),
   DB_PATH: z.string().min(1).default('vanguard.db'),

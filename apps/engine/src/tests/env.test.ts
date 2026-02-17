@@ -12,6 +12,7 @@ describe('env validation', () => {
     expect(env.DRY_RUN).toBe(true);
     expect(env.KILL_SWITCH).toBe(true);
     expect(env.ARMED).toBe(false);
+    expect(env.OPS_HOST).toBe('127.0.0.1');
     expect(env.OPS_PORT).toBe(3077);
   });
 });

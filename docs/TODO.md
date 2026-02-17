@@ -1,5 +1,7 @@
 # VANGUARD-POLY TODO
 
+Source of truth: root `TODO.md`. This file is a phase-oriented mirror for AGENTS.md continuity.
+
 ## Current Focus
 
 - [x] Phase 0: Operator control-plane scaffold (OpenClaw + Telegram-safe defaults)
@@ -25,6 +27,8 @@
 - [x] Redacting JSON logger scaffolded with dual stream output
 - [x] Engine env validation implemented with zod and safe defaults
 - [x] SQLite bootstrap uses WAL + tuned pragmas
+- [x] Ops API applies `helmet` security headers
+- [x] Ops server host binding configurable via `OPS_HOST` (default loopback)
 - [x] Migration runner and initial schema created
 - [x] Engine boot path: validate env, migrate DB, start ops server, heartbeat
 - [x] Quality gates pass (`typecheck`, `test`, `lint`)

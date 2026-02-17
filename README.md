@@ -31,6 +31,8 @@ Additional enforced guardrail posture:
 
 - Secret redaction in structured logs.
 - Token auth on all ops endpoints.
+- HTTP hardening via `helmet` on the ops API.
+- Loopback bind by default (`OPS_HOST=127.0.0.1`).
 - SQLite WAL mode enabled.
 - Config writes restricted to an allowlist.
 
@@ -99,6 +101,7 @@ vanguard-poly/
   - `trades`
   - `decisions`
 - Ops API in `apps/engine/src/ops/server.ts` with token auth.
+- Ops API security middleware via `helmet`.
 - Boot lifecycle in `apps/engine/src/main.ts`:
   - load env
   - run migrations
@@ -158,6 +161,7 @@ Safety flags:
 
 Runtime:
 
+- `OPS_HOST` (default `127.0.0.1`)
 - `OPS_PORT` (default `3077`)
 - `DB_PATH` (default `vanguard.db`)
 - `HEARTBEAT_INTERVAL_MS` (default `15000`)
@@ -197,6 +201,10 @@ Set at minimum in `.env`:
 - `VANGUARD_TOKEN`
 - `TELEGRAM_BOT_TOKEN` (for OpenClaw integration)
 
+When running inside Docker and exposing the engine port, set:
+
+- `OPS_HOST=0.0.0.0`
+
 ### Run Engine
 
 ```bash
@@ -221,6 +229,7 @@ npm run build
   - verifies WAL + pragma settings
 - `apps/engine/src/tests/ops-auth.test.ts`
   - validates unauthorized requests are rejected
+  - validates `helmet` security headers are present
 
 ## Roadmap (High-Level)
 

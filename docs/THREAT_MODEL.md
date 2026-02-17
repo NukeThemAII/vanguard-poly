@@ -23,6 +23,8 @@
 ## Initial Mitigations
 
 - Mandatory `x-vanguard-token` auth for all `/ops/*` endpoints.
+- `helmet` middleware enabled on ops API responses.
+- Default bind host is loopback (`OPS_HOST=127.0.0.1`) unless explicitly overridden.
 - Redacting logger denylist + regex scrub.
 - Safe defaults: `DRY_RUN=true`, `KILL_SWITCH=true`, `ARMED=false`.
 - Config allowlist on `/ops/config`.

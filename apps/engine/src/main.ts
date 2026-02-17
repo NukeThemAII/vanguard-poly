@@ -52,6 +52,7 @@ const main = (): void => {
   heartbeat.unref();
 
   logger.info('Engine boot complete', {
+    opsHost: env.OPS_HOST,
     opsPort: env.OPS_PORT,
     dbPath: env.DB_PATH,
     migrationsApplied: migrationResult.applied,

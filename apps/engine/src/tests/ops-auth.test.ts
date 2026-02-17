@@ -47,6 +47,7 @@ describe('ops endpoint auth', () => {
       .expect(200);
 
     expect(success.body.ok).toBe(true);
+    expect(success.headers['x-dns-prefetch-control']).toBe('off');
 
     db.close();
   });

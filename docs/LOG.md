@@ -15,3 +15,11 @@
 - **Alternatives Considered:** Editing `AGENTS.md` to restate existing controls (rejected as redundant).
 - **Impact:** Source-of-truth remains stable; implementation aligns directly with existing guardrails.
 - **Follow-ups:** Enforce dead-man switch ping in Phase 4 strategy loop.
+
+## [2026-02-17 10:44] - Audit Remediation (Immediate)
+
+- **Context:** Reviewed external `AUDIT.md` and selected immediate, low-risk improvements aligned with Phase 1 scope.
+- **Decision:** Implemented `helmet` for ops API headers, added explicit `OPS_HOST` binding default to loopback, and reduced TODO tracking drift by declaring root `TODO.md` source-of-truth.
+- **Alternatives Considered:** Deferring security middleware and host binding until Phase 4 (rejected due to low implementation cost and early hardening value).
+- **Impact:** Better API hardening posture, clearer network exposure behavior, and improved multi-agent documentation hygiene.
+- **Follow-ups:** Add rate limiting and request correlation IDs to `/ops/*` endpoints.

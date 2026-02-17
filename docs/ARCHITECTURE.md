@@ -12,7 +12,8 @@
 
 - OpenClaw receives Telegram commands.
 - OpenClaw skill/plugin calls Engine HTTP ops endpoints on localhost.
-- Engine enforces token auth and persists control-state in SQLite.
+- Engine enforces token auth, applies `helmet` headers, and persists control-state in SQLite.
+- Engine binds by `OPS_HOST` (default `127.0.0.1`).
 
 ## Safety Defaults
 

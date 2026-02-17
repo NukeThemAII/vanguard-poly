@@ -11,9 +11,11 @@
 
 1. Ensure `.env` values keep defaults: `DRY_RUN=true`, `KILL_SWITCH=true`, `ARMED=false`.
 2. Set `VANGUARD_TOKEN` and `TELEGRAM_BOT_TOKEN`.
-3. Start Engine and verify `/ops/status` succeeds with token auth.
-4. Start OpenClaw with `openclaw/openclaw.json.example` copied to active config.
-5. Confirm Telegram `/status` command reports safe state.
+3. Keep `OPS_HOST=127.0.0.1` for host-local deployments.
+4. If running in Docker with published port, override `OPS_HOST=0.0.0.0`.
+5. Start Engine and verify `/ops/status` succeeds with token auth.
+6. Start OpenClaw with `openclaw/openclaw.json.example` copied to active config.
+7. Confirm Telegram `/status` command reports safe state.
 
 ## Safe State Changes
 
@@ -21,6 +23,7 @@
 - `kill` should be immediate and reversible only by authorized operator.
 - `set` must only modify allowlisted parameters.
 - Never pass shell commands through Telegram controls.
+- Confirm ops responses include expected security headers from `helmet`.
 
 ## Incident Placeholder
 
