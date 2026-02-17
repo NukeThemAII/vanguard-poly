@@ -2,7 +2,7 @@
 
 Institutional-grade TypeScript monorepo for a low-latency, LLM-assisted Polymarket trading engine with an OpenClaw Telegram control-plane.
 
-Current state: **Phase 0 + Phase 1 + Phase 2 complete**. Live market/trading loop is intentionally not implemented yet.
+Current state: **Phase 0 + Phase 1 + Phase 2 + Phase 3 complete**. Live wallet execution is intentionally disabled; execution path is dry-run only.
 
 ## Why This Exists
 
@@ -36,7 +36,7 @@ Additional enforced guardrail posture:
 - SQLite WAL mode enabled.
 - Config writes restricted to an allowlist.
 
-## Architecture (Phase 0/1)
+## Architecture (Phase 0/1/2/3)
 
 ```text
 Telegram User
@@ -50,6 +50,9 @@ Engine Ops API (Express, :3077)
     |
     v
 SQLite (better-sqlite3, WAL)
+    |
+    v
+Phase 3 Dry-Run Execution (IOC/FOK + risk gate + intent ledger)
 ```
 
 ## Repository Layout
@@ -65,7 +68,7 @@ vanguard-poly/
     plugins/vanguard-poly/    # minimal command bridge stub
   packages/
     domain/                   # pure domain types/invariants (no I/O)
-    adapters/                 # adapter placeholders for Phase 2+
+    adapters/                 # LLM + market data adapters
     utils/                    # logger + retry/backoff utility code
   docs/                       # architecture/runbook/threat-model docs
   README.md                   # project overview and operator quickstart
@@ -133,6 +136,24 @@ vanguard-poly/
 - `packages/adapters/src/providers/deepseek-provider.ts`:
   - DeepSeek adapter using OpenAI-compatible chat completions
 
+### Market + Execution (Phase 3)
+
+- `packages/adapters/src/providers/polymarket-market-provider.ts`:
+  - trending/high-volume market discovery
+  - orderbook snapshot fetch (`bestBid`, `bestAsk`, `spreadBps`, `liquidityUsd`)
+  - timeout + retry(backoff+jitter) + circuit-breaker
+- `apps/engine/src/execution/orchestrator.ts`:
+  - hard risk gate enforcement before placement
+  - intent persistence before placement attempt
+  - idempotent intent handling on retries
+- `apps/engine/src/execution/dry-run-execution-client.ts`:
+  - IOC/FOK dry-run placement behavior
+  - slippage cap checks and cancellation paths
+- `apps/engine/src/database/migrations/002_execution_intents.sql`:
+  - `execution_intents` audit table
+- `apps/engine/src/phase3/simulator.ts`:
+  - end-to-end dry-run simulation over top trending market
+
 ## Ops API (Current)
 
 All endpoints require header:
@@ -141,14 +162,27 @@ All endpoints require header:
 x-vanguard-token: <VANGUARD_TOKEN>
 ```
 
-| Method | Path          | Purpose                                 |
-| ------ | ------------- | --------------------------------------- |
-| GET    | `/ops/status` | Health, uptime, safety flags, db status |
-| POST   | `/ops/arm`    | Set `ARMED=true`                        |
-| POST   | `/ops/disarm` | Set `ARMED=false`                       |
-| POST   | `/ops/kill`   | Set `KILL_SWITCH=true`                  |
-| POST   | `/ops/unkill` | Set `KILL_SWITCH=false`                 |
-| POST   | `/ops/config` | Set allowlisted runtime key/value       |
+| Method | Path                  | Purpose                                              |
+| ------ | --------------------- | ---------------------------------------------------- |
+| GET    | `/ops/status`         | Health, uptime, safety flags, db status              |
+| POST   | `/ops/arm`            | Set `ARMED=true`                                     |
+| POST   | `/ops/disarm`         | Set `ARMED=false`                                    |
+| POST   | `/ops/kill`           | Set `KILL_SWITCH=true`                               |
+| POST   | `/ops/unkill`         | Set `KILL_SWITCH=false`                              |
+| POST   | `/ops/config`         | Set allowlisted runtime key/value                    |
+| POST   | `/ops/simulate-trade` | Run Phase 3 dry-run trade simulation (auth required) |
+
+Example `/ops/simulate-trade` payload:
+
+```json
+{
+  "side": "BUY",
+  "sizeUsd": 50,
+  "confidence": 0.9,
+  "edgeBps": 120,
+  "timeInForce": "IOC"
+}
+```
 
 `/ops/config` allowlist:
 
@@ -180,7 +214,10 @@ Runtime:
 - `OPS_PORT` (default `3077`)
 - `DB_PATH` (default `vanguard.db`)
 - `HEARTBEAT_INTERVAL_MS` (default `15000`)
+- `EXECUTION_TIMEOUT_MS` (default `2500`)
 - `DEAD_MAN_SWITCH_URL` (optional placeholder for Phase 4)
+- `POLYMARKET_GAMMA_BASE_URL` (default `https://gamma-api.polymarket.com`)
+- `POLYMARKET_CLOB_BASE_URL` (default `https://clob.polymarket.com`)
 
 Risk caps (present now, full enforcement in later phases):
 
@@ -245,6 +282,11 @@ npm run build
 - `apps/engine/src/tests/ops-auth.test.ts`
   - validates unauthorized requests are rejected
   - validates `helmet` security headers are present
+- `apps/engine/src/tests/ops-simulate.test.ts`
+  - validates simulate endpoint behavior and payload validation
+- `apps/engine/src/tests/execution-orchestrator.test.ts`
+  - validates risk rejection path
+  - validates intent persistence before placement and idempotent retries
 - `packages/adapters/src/tests/json.test.ts`
   - validates strict schema parsing and malformed JSON rejection
 - `packages/adapters/src/tests/rate-limited-queue.test.ts`
@@ -253,12 +295,16 @@ npm run build
   - validates Gemini structured parsing + queue throttling
 - `packages/adapters/src/tests/deepseek-provider.test.ts`
   - validates DeepSeek structured parsing path
+- `packages/adapters/src/tests/polymarket-market-provider.test.ts`
+  - validates market discovery, orderbook snapshot metrics, and retry behavior
+- `packages/domain/src/tests/risk.test.ts`
+  - validates risk cap enforcement logic
 
 ## Roadmap (High-Level)
 
 - **Phase 2**: LLM provider interface + Gemini/DeepSeek adapters with schema validation.
 - **Phase 3**: Polymarket market data + dry-run execution wiring.
-- **Phase 4**: strategy loop, fault tolerance, dead-man switch ping.
+- **Phase 4**: strategy loop orchestration, fault tolerance, dead-man switch ping.
 - **Phase 5**: optional read-only dashboard.
 - **Phase 6**: hardened OpenClaw-to-Engine bridge.
 - **Phase 7**: full threat-model/runbook production posture.

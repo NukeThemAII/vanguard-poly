@@ -7,7 +7,7 @@ Cross-session priority queue for VANGUARD-POLY.
 - [x] Phase 0: OpenClaw Telegram-first control-plane scaffold
 - [x] Phase 1: Engine scaffold + hygiene baseline
 - [x] Phase 2: LLM adapters (Gemini + DeepSeek, schema-only outputs)
-- [ ] Phase 3: Polymarket adapters (market + execution under DRY_RUN)
+- [x] Phase 3: Polymarket adapters (market + execution under DRY_RUN)
 - [ ] Phase 4: Strategy loop and resilience hardening
 - [ ] Phase 5: Optional read-only dashboard
 - [ ] Phase 6: OpenClaw <-> Engine bridge hardening
@@ -24,13 +24,17 @@ Cross-session priority queue for VANGUARD-POLY.
 - [x] Implement Gemini adapter with queue spacing/rate limiting.
 - [x] Implement DeepSeek adapter (OpenAI-compatible base URL).
 - [x] Add malformed JSON rejection tests for LLM outputs.
-- [ ] Wire adapter selection and invocation into engine decision pipeline.
+- [x] Implement Polymarket market provider (trending + orderbook snapshot + liquidity/spread).
+- [x] Add DRY_RUN IOC/FOK execution path with hard risk gates.
+- [x] Persist execution intents before placement attempts.
+- [x] Add `/ops/simulate-trade` endpoint for authenticated dry-run execution checks.
+- [ ] Wire LLM analysis output into strategy-driven trade candidate selection.
 
 ## Engine Hardening Backlog
 
-- [ ] Add risk-evaluation module that enforces caps before any execution path.
-- [ ] Add idempotent execution intent record (`execution_intents`) before place-order attempts.
-- [ ] Add timeout/retry/backoff/circuit-breaker wrappers for all outbound providers.
+- [x] Add risk-evaluation module that enforces caps before execution.
+- [x] Add idempotent execution intent persistence before place-order attempts.
+- [x] Add timeout/retry/backoff/circuit-breaker to market data network calls.
 - [ ] Add dead-man switch ping worker using `DEAD_MAN_SWITCH_URL`.
 - [ ] Add structured request IDs and audit fields to ops endpoint logs.
 - [ ] Add rate limiting for `/ops/*` endpoints.

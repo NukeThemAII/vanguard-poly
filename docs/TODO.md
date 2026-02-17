@@ -7,7 +7,7 @@ Source of truth: root `TODO.md`. This file is a phase-oriented mirror for AGENTS
 - [x] Phase 0: Operator control-plane scaffold (OpenClaw + Telegram-safe defaults)
 - [x] Phase 1: Engine scaffold + hygiene baseline
 - [x] Phase 2: LLM adapters (provider-agnostic + schema-only output)
-- [ ] Phase 3: Polymarket market/wallet adapters under DRY_RUN
+- [x] Phase 3: Polymarket market/wallet adapters under DRY_RUN
 - [ ] Phase 4: Strategy loop + resiliency drills
 - [ ] Phase 5: Optional read-only dashboard
 - [ ] Phase 6: OpenClaw to Engine bridge hardening
@@ -42,7 +42,16 @@ Source of truth: root `TODO.md`. This file is a phase-oriented mirror for AGENTS
 
 ## Next Up (Phase 3)
 
-- [ ] Implement market data adapters (trending/high-volume + orderbook snapshot)
-- [ ] Add DRY_RUN order execution pathway with IOC/FOK semantics
-- [ ] Implement risk gate evaluation before execution attempt
-- [ ] Persist execution intent IDs before placement attempts
+- [x] Implement market data adapters (trending/high-volume + orderbook snapshot)
+- [x] Add DRY_RUN order execution pathway with IOC/FOK semantics
+- [x] Implement risk gate evaluation before execution attempt
+- [x] Persist execution intent IDs before placement attempts
+- [x] Add `execution_intents` migration and repository access
+- [x] Add authenticated `/ops/simulate-trade` endpoint
+
+## Next Up (Phase 4)
+
+- [ ] Wire LLM provider outputs into market selection and side/size decisions
+- [ ] Add scheduler tick loop with provider failure isolation
+- [ ] Add dead-man switch ping for external healthcheck URL
+- [ ] Add retry and circuit-breaker coverage for all outbound provider calls

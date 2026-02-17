@@ -30,6 +30,9 @@
 - Config allowlist on `/ops/config`.
 - No shell command execution from OpenClaw skill/plugin stubs.
 - LLM outputs are schema-validated before downstream use.
+- Market provider uses timeout + retry(backoff+jitter) + circuit-breaker.
+- Execution intents are persisted before placement attempts for idempotency/audit.
+- Dry-run execution path enforces IOC/FOK semantics and slippage caps.
 
 ## Open Items
 

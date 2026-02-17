@@ -57,6 +57,7 @@ const envSchema = z.object({
   VANGUARD_TOKEN: z.string().min(1, 'VANGUARD_TOKEN is required'),
   DB_PATH: z.string().min(1).default('vanguard.db'),
   HEARTBEAT_INTERVAL_MS: coerceNumber(z.number().int().positive(), 15_000),
+  EXECUTION_TIMEOUT_MS: coerceNumber(z.number().int().positive(), 2_500),
   DEAD_MAN_SWITCH_URL: optionalUrl,
 
   DRY_RUN: coerceBoolean(true),
@@ -74,6 +75,8 @@ const envSchema = z.object({
 
   GEMINI_API_KEY: z.string().optional(),
   DEEPSEEK_API_KEY: z.string().optional(),
+  POLYMARKET_GAMMA_BASE_URL: z.string().url().default('https://gamma-api.polymarket.com'),
+  POLYMARKET_CLOB_BASE_URL: z.string().url().default('https://clob.polymarket.com'),
   POLYMARKET_API_KEY: z.string().optional(),
   POLYMARKET_SECRET: z.string().optional(),
   WALLET_PRIVATE_KEY: z.string().optional(),

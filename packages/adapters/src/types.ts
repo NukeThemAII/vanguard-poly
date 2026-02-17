@@ -1,3 +1,5 @@
+import type { OrderBookSnapshot, TrendingMarket } from '@vanguard-poly/domain';
+
 export type AnalysisRequest = {
   prompt: string;
   systemPrompt?: string;
@@ -27,4 +29,20 @@ export interface ILLMProvider {
   readonly providerName: string;
   readonly model: string;
   analyze(request: AnalysisRequest): Promise<AnalysisResult>;
+}
+
+export type TrendingMarketsRequest = {
+  limit?: number;
+  minLiquidityUsd?: number;
+};
+
+export type OrderBookRequest = {
+  marketId: string;
+  tokenId: string;
+};
+
+export interface IMarketDataProvider {
+  readonly providerName: string;
+  getTrendingMarkets(request?: TrendingMarketsRequest): Promise<TrendingMarket[]>;
+  getOrderbookSnapshot(request: OrderBookRequest): Promise<OrderBookSnapshot>;
 }

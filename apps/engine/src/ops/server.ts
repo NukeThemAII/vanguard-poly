@@ -1,14 +1,22 @@
 import express, { type NextFunction, type Request, type Response } from 'express';
 import helmet from 'helmet';
 import type { Logger } from 'winston';
+import { z } from 'zod';
+import type { SimulateTradeInput, SimulateTradeResult } from '../phase3/simulator';
 import type { Env } from '../config/env';
 import { getEngineState, setEngineState } from '../database/db';
 import type { SQLiteDatabase } from '../database/db';
+import { loadRuntimeRiskCaps, loadRuntimeRiskMetrics } from '../phase3/runtime-config';
+
+export type Phase3SimulatorLike = {
+  simulateTrade(input?: SimulateTradeInput): Promise<SimulateTradeResult>;
+};
 
 export type OpsServerDependencies = {
   env: Env;
   db: SQLiteDatabase;
   logger: Logger;
+  phase3Simulator?: Phase3SimulatorLike;
   startedAtMs?: number;
 };
 
@@ -36,6 +44,16 @@ const parseConfigValue = (value: unknown): string | number | boolean | null => {
 
   throw new Error('Unsupported config value type');
 };
+
+const simulateTradeSchema = z.object({
+  marketId: z.string().min(1).optional(),
+  tokenId: z.string().min(1).optional(),
+  side: z.enum(['BUY', 'SELL']).optional(),
+  sizeUsd: z.coerce.number().positive().optional(),
+  confidence: z.coerce.number().min(0).max(1).optional(),
+  edgeBps: z.coerce.number().nonnegative().optional(),
+  timeInForce: z.enum(['IOC', 'FOK']).optional(),
+});
 
 const requireToken =
   (token: string) =>
@@ -75,6 +93,7 @@ export const buildOpsApp = ({
   env,
   db,
   logger,
+  phase3Simulator,
   startedAtMs = Date.now(),
 }: OpsServerDependencies) => {
   const app = express();
@@ -88,6 +107,8 @@ export const buildOpsApp = ({
       ok: true,
       uptimeSeconds: Math.floor((Date.now() - startedAtMs) / 1000),
       states: getRuntimeFlags(db, env),
+      riskCaps: loadRuntimeRiskCaps(db, env),
+      riskMetrics: loadRuntimeRiskMetrics(db),
       deadManSwitch: {
         configured: Boolean(env.DEAD_MAN_SWITCH_URL),
         note: 'Placeholder until Phase 4 strategy loop pings healthcheck URL',
@@ -142,6 +163,35 @@ export const buildOpsApp = ({
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Invalid payload';
       response.status(400).json({ error: message });
+    }
+  });
+
+  app.post('/ops/simulate-trade', async (request: Request, response: Response) => {
+    const parsed = simulateTradeSchema.safeParse(request.body ?? {});
+
+    if (!parsed.success) {
+      response.status(400).json({
+        error: 'Invalid simulate-trade payload',
+        details: parsed.error.issues.map((issue) => ({
+          path: issue.path.join('.'),
+          message: issue.message,
+        })),
+      });
+      return;
+    }
+
+    if (!phase3Simulator) {
+      response.status(501).json({ error: 'Phase 3 simulator is not configured' });
+      return;
+    }
+
+    try {
+      const result = await phase3Simulator.simulateTrade(parsed.data);
+      response.json({ ok: true, ...result });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Simulation failed';
+      logger.error('Phase3 simulation failed', { error: message });
+      response.status(500).json({ error: message });
     }
   });
 

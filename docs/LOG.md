@@ -31,3 +31,11 @@
 - **Alternatives Considered:** Deferring adapter implementation until market integration (rejected to keep Phase 2 boundaries explicit and testable).
 - **Impact:** Engine can consume deterministic, validated analysis payloads once strategy loop wiring begins in later phases.
 - **Follow-ups:** Integrate adapters into decision pipeline and add provider timeout/retry/circuit-breaker wrappers.
+
+## [2026-02-17 11:32] - Phase 3 Completion (Market + Dry-Run Execution)
+
+- **Context:** User requested implementation of Phase 3 market adapter and execution controls.
+- **Decision:** Added Polymarket market provider, dry-run IOC/FOK execution path, hard risk gates, and execution-intent persistence before placement attempts.
+- **Alternatives Considered:** Delaying intent persistence until live execution (rejected due to idempotency/audit requirements).
+- **Impact:** Engine now has an end-to-end dry-run execution pipeline with authenticated ops trigger (`/ops/simulate-trade`) and audited intent records.
+- **Follow-ups:** Integrate strategy scheduler and LLM-driven candidate generation in Phase 4.

@@ -97,3 +97,26 @@ Use this file for concise, timestamped entries after each meaningful change.
   - Adapters are not yet wired into engine decision loop (Phase 3/4 integration item).
 - Next:
   - Start Phase 3 market data + DRY_RUN execution adapter implementation.
+
+## [2026-02-17 11:32] - Phase 3 Market + Dry-Run Execution Implemented
+
+- Context:
+  - Implemented the next requested build step: market adapters and dry-run execution pipeline with risk and idempotency controls.
+- Changes:
+  - Added Polymarket market provider (`trending` + `orderbook snapshot`) with timeout, retry(backoff+jitter), and circuit-breaker protection.
+  - Added domain risk evaluation module with strict hard-limit checks.
+  - Added execution intent migration (`002_execution_intents.sql`) and repository layer.
+  - Added dry-run execution client implementing IOC/FOK semantics and slippage guard behavior.
+  - Added orchestration layer that evaluates risk, persists intent before placement, executes, and records simulated fills.
+  - Added authenticated `/ops/simulate-trade` endpoint for end-to-end dry-run verification.
+  - Added runtime config loading for safety/risk caps/metrics from persisted `engine_state`.
+  - Updated docs and TODO tracking to reflect Phase 3 completion and next Phase 4 targets.
+- Validation:
+  - `npm run typecheck` passed.
+  - `npm run test` passed (21 tests, 11 files).
+  - `npm run lint` passed.
+- Risks / Notes:
+  - Live wallet order placement is still intentionally unimplemented; execution path is dry-run only.
+  - Runtime environment here is Node 20 while project baseline remains Node 22.
+- Next:
+  - Wire LLM outputs into strategy candidate generation and scheduler loop (Phase 4).
