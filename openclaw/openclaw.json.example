@@ -1,0 +1,41 @@
+{
+  "channels": {
+    "telegram": {
+      "botToken": "${TELEGRAM_BOT_TOKEN}",
+      "dmPolicy": "pairing",
+      "allowFrom": [],
+      "groupPolicy": "allowlist",
+      "groupAllowFrom": [],
+      "linkPreview": false,
+      "mediaMaxMb": 10
+    }
+  },
+  "agents": {
+    "defaults": {
+      "sandbox": {
+        "enabled": true
+      }
+    },
+    "list": [
+      {
+        "id": "main",
+        "name": "vanguard-poly-ops",
+        "groupChat": {
+          "requireMention": true,
+          "mentionPatterns": ["\\b@vanguard\\b", "\\b/vanguard\\b"]
+        }
+      }
+    ]
+  },
+  "skills": {
+    "entries": {
+      "vanguard-poly": {
+        "enabled": true,
+        "env": {
+          "VANGUARD_ENGINE_URL": "http://127.0.0.1:3077",
+          "VANGUARD_TOKEN": "${VANGUARD_TOKEN}"
+        }
+      }
+    }
+  }
+}

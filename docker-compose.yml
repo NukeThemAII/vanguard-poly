@@ -1,0 +1,12 @@
+version: '3.9'
+services:
+  engine:
+    image: node:22
+    working_dir: /workspace
+    command: ['npm', 'run', 'dev', '--workspace', '@vanguard-poly/engine']
+    env_file:
+      - .env
+    volumes:
+      - ./:/workspace
+    ports:
+      - '3077:3077'
